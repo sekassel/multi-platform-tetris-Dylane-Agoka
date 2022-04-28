@@ -1,9 +1,16 @@
 {
   "name": "cross-platform-monorepo",
   "version": "0.0.0",
+  "description": "Cross-platform monorepo Angular app",
+  "author": {
+    "name": "dylane-agoka",
+    "email": "dylaneagoka47@gmail.com"
+  },
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start:tetris": "ng serve tetris -o",
+    "start": "http-server -p $PORT -c-1 ./dist/tetris",
     "build:tetris": "ng build tetris",
     "test:tetris": "ng test tetris",
     "lint:tetris": "ng lint tetris",
@@ -12,7 +19,13 @@
     "build:game-engine-lib": "ng build game-engine-lib --watch",
     "test:game-engine-lib": "ng test game-engine-lib",
     "lint:game-engine-lib": "ng lint game-engine-lib",
-    "e2e:game-engine-lib": "ng e2e game-engine-lib"
+    "e2e:game-engine-lib": "ng e2e game-engine-lib",
+    "electron:serve-tsc": "tsc -p tsconfig.serve.json",
+    "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron .  --serve",
+    "postinstall": "electron-builder install-app-deps",
+    "build": "npm run electron:serve-tsc && ng build tetris --base-href ./",
+    "build:prod": "npm run build -- -c production",
+    "electron:package": "npm run build:prod && electron-builder build"
   },
   "private": true,
   "dependencies": {
@@ -24,18 +37,28 @@
     "@angular/platform-browser": "~11.0.5",
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
+    "@angular/service-worker": "~11.0.5",
+    "@capacitor/cli": "^2.4.5",
+    "@capacitor/core": "^2.4.5",
+    "electron-reload": "^2.0.0-alpha.1",
+    "http-server": "^14.1.0",
     "ng-zzfx": "0.0.6",
+    "npm-run-all": "^4.1.5",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "wait-on": "^6.0.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1100.7",
     "@angular/cli": "~11.0.5",
     "@angular/compiler-cli": "~11.0.5",
+    "@angular/pwa": "^13.3.4",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "electron": "^11.0.5",
+    "electron-builder": "^23.0.3",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.1.0",
